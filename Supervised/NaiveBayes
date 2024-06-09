@@ -1,0 +1,75 @@
+import numpy as np
+
+class NaiveBayesClassifier:
+    def fit(self, X, y):
+        n_samples, n_features = X.shape
+        self.classes = np.unique(y)
+        n_classes = len(self.classes)
+
+        # Initialize mean, var, and prior
+        self.mean = np.zeros((n_classes, n_features), dtype=np.float64)
+        self.var = np.zeros((n_classes, n_features), dtype=np.float64)
+        self.priors = np.zeros(n_classes, dtype=np.float64)
+
+        for idx, c in enumerate(self.classes):
+            X_c = X[y == c]
+            self.mean[idx, :] = X_c.mean(axis=0)
+            self.var[idx, :] = X_c.var(axis=0)
+            self.priors[idx] = X_c.shape[0] / float(n_samples)
+
+    def predict(self, X):
+        y_pred = [self._predict(x) for x in X]
+        return np.array(y_pred)
+
+    def _predict(self, x):
+        posteriors = []
+
+        for idx, c in enumerate(self.classes):
+            prior = np.log(self.priors[idx])
+            class_conditional = np.sum(np.log(self._pdf(idx, x)))
+            posterior = prior + class_conditional
+            posteriors.append(posterior)
+
+        return self.classes[np.argmax(posteriors)]
+
+    def _pdf(self, class_idx, x):
+        mean = self.mean[class_idx]
+        var = self.var[class_idx]
+        numerator = np.exp(- (x - mean) ** 2 / (2 * var))
+        denominator = np.sqrt(2 * np.pi * var)
+        return numerator / denominator
+class NaiveBayesRegressor:
+    def fit(self, X, y):
+        n_samples, n_features = X.shape
+        self.mean = np.mean(X, axis=0)
+        self.var = np.var(X, axis=0)
+        self.y_mean = np.mean(y)
+        self.y_var = np.var(y)
+
+    def predict(self, X):
+        return np.array([self._predict(x) for x in X])
+
+    def _predict(self, x):
+        probabilities = self._pdf(x)
+        return np.sum(probabilities * self.y_mean) / np.sum(probabilities)
+
+    def _pdf(self, x):
+        mean = self.mean
+        var = self.var
+        numerator = np.exp(- (x - mean) ** 2 / (2 * var))
+        denominator = np.sqrt(2 * np.pi * var)
+        return numerator / denominator
+
+# Example usage:
+if __name__ == "__main__":
+    # Sample data for regression
+    X_reg = np.array([[1, 2], [2, 3], [3, 4], [4, 5], [5, 6]])
+    y_reg = np.array([1.1, 1.9, 3.0, 3.8, 5.2])
+    
+    # Create and train the regressor
+    nb_regressor = NaiveBayesRegressor()
+    nb_regressor.fit(X_reg, y_reg)
+    
+    # Make predictions
+    predictions_reg = nb_regressor.predict(X_reg)
+    print("Naive Bayes Regression Predictions:", predictions_reg)
