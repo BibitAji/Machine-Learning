@@ -1,6 +1,5 @@
 # Machine-Learning
 Machine Learning Algorithm
-In machine learning, prediction models are algorithms used to predict outcomes based on input data. Here are various types of prediction models in machine learning:
 
 ### Supervised Learning Models
 
