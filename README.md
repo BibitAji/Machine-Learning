@@ -42,7 +42,6 @@ In machine learning, prediction models are algorithms used to predict outcomes b
 
 1. **ARIMA (AutoRegressive Integrated Moving Average)**: Combines autoregressive, differencing, and moving average components.
 2. **Exponential Smoothing (ETS)**: Models level, trend, and seasonality in time series data.
-3. **Prophet**: Developed by Facebook, handles seasonality and holidays in time series data.
-4. **LSTM Networks**: Neural networks specifically designed for sequential data like time series.
+3. **LSTM Networks**: Neural networks specifically designed for sequential data like time series.
 
 These models can be combined or modified to create more complex systems tailored to specific tasks and data types. The choice of model depends on the nature of the problem, the data available, and the desired outcome.
